@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useEvents } from "@/hooks/use-events";
 
 const FREEBIE_VALUE = {
   Certificate: 200,
@@ -24,280 +25,12 @@ const FREEBIE_VALUE = {
 const swagScore = (freebies) =>
   freebies.reduce((s, f) => s + (FREEBIE_VALUE[f] || 100), 0);
 
-const events = [
-  {
-    id: 1,
-    company: "Google",
-    logo: "G",
-    color: "#4285F4",
-    type: "Workshop",
-    mode: "offline",
-    title: "AI/ML Bootcamp 2025",
-    date: "2025-06-10",
-    time: "10:00 AM",
-    venue: "JEC Auditorium, Jaipur",
-    distance: 2.1,
-    city: "Jaipur",
-    paid: false,
-    price: 0,
-    freebies: ["Certificate", "Google Swag Kit", "Lunch"],
-    eligibility: ["CSE", "IT", "ECE", "All Branches"],
-    link: "https://events.google.com",
-    tags: ["AI", "ML"],
-    totalSeats: 120,
-    taken: 83,
-  },
-  {
-    id: 2,
-    company: "Microsoft",
-    logo: "M",
-    color: "#00A4EF",
-    type: "Hackathon",
-    mode: "offline",
-    title: "Azure Cloud Challenge",
-    date: "2025-06-14",
-    time: "9:00 AM",
-    venue: "MNIT, Jaipur",
-    distance: 4.5,
-    city: "Jaipur",
-    paid: false,
-    price: 0,
-    freebies: ["Certificate", "Azure Credits", "T-Shirt"],
-    eligibility: ["CSE", "IT"],
-    link: "https://microsoft.com/events",
-    tags: ["Cloud", "Azure"],
-    totalSeats: 200,
-    taken: 61,
-  },
-  {
-    id: 3,
-    company: "Amazon",
-    logo: "A",
-    color: "#FF9900",
-    type: "Seminar",
-    mode: "virtual",
-    title: "AWS re:Invent Student Day",
-    date: "2025-06-20",
-    time: "11:00 AM",
-    venue: "Online (Zoom)",
-    distance: 0,
-    city: "Online",
-    paid: false,
-    price: 0,
-    freebies: ["Certificate", "Amazon Gift Voucher"],
-    eligibility: ["All Branches"],
-    link: "https://aws.amazon.com/events",
-    tags: ["Cloud", "DevOps"],
-    totalSeats: 300,
-    taken: 120,
-  },
-  {
-    id: 4,
-    company: "IBM",
-    logo: "I",
-    color: "#1F70C1",
-    type: "Workshop",
-    mode: "offline",
-    title: "Quantum Computing Intro",
-    date: "2025-06-18",
-    time: "2:00 PM",
-    venue: "BITS Pilani, Pilani",
-    distance: 80,
-    city: "Pilani",
-    paid: true,
-    price: 199,
-    freebies: ["Certificate", "IBM Badge"],
-    eligibility: ["CSE", "ECE", "Physics"],
-    link: "https://ibm.com/events",
-    tags: ["Quantum", "Research"],
-    totalSeats: 60,
-    taken: 52,
-  },
-  {
-    id: 5,
-    company: "Infosys",
-    logo: "In",
-    color: "#007CC3",
-    type: "Workshop",
-    mode: "offline",
-    title: "Full Stack Dev Sprint",
-    date: "2025-06-08",
-    time: "10:00 AM",
-    venue: "Infosys Campus, Jaipur",
-    distance: 3.7,
-    city: "Jaipur",
-    paid: false,
-    price: 0,
-    freebies: ["Certificate", "Infosys Goodie Bag", "Snacks"],
-    eligibility: ["CSE", "IT", "All Branches"],
-    link: "https://infosys.com/events",
-    tags: ["WebDev", "MERN"],
-    totalSeats: 150,
-    taken: 98,
-  },
-  {
-    id: 6,
-    company: "TCS",
-    logo: "T",
-    color: "#5B2D8E",
-    type: "Hackathon",
-    mode: "hybrid",
-    title: "TCS CodeVita Campus Edition",
-    date: "2025-06-22",
-    time: "8:00 AM",
-    venue: "Rajasthan University + Online",
-    distance: 5.1,
-    city: "Jaipur",
-    paid: false,
-    price: 0,
-    freebies: ["Certificate", "TCS Goodies", "Cash Prize"],
-    eligibility: ["CSE", "IT"],
-    link: "https://tcs.com/codevita",
-    tags: ["Coding", "Competitive"],
-    totalSeats: 500,
-    taken: 211,
-  },
-  {
-    id: 7,
-    company: "Wipro",
-    logo: "W",
-    color: "#341C79",
-    type: "Seminar",
-    mode: "virtual",
-    title: "Cybersecurity Awareness Day",
-    date: "2025-07-01",
-    time: "10:00 AM",
-    venue: "Online (Google Meet)",
-    distance: 0,
-    city: "Online",
-    paid: false,
-    price: 0,
-    freebies: ["Certificate", "Pen Drive"],
-    eligibility: ["All Branches"],
-    link: "https://wipro.com/events",
-    tags: ["Security", "Cyber"],
-    totalSeats: 250,
-    taken: 88,
-  },
-  {
-    id: 8,
-    company: "Adobe",
-    logo: "Ad",
-    color: "#FF0000",
-    type: "Workshop",
-    mode: "offline",
-    title: "UX Design Fundamentals",
-    date: "2025-06-25",
-    time: "11:00 AM",
-    venue: "IIT Jodhpur",
-    distance: 95,
-    city: "Jodhpur",
-    paid: true,
-    price: 299,
-    freebies: ["Certificate", "Adobe Creative Cloud Trial", "Tote Bag"],
-    eligibility: ["CSE", "Design", "All Branches"],
-    link: "https://adobe.com/events",
-    tags: ["Design", "UX"],
-    totalSeats: 80,
-    taken: 71,
-  },
-  {
-    id: 9,
-    company: "Qualcomm",
-    logo: "Q",
-    color: "#3253DC",
-    type: "Workshop",
-    mode: "offline",
-    title: "Embedded Systems & IoT Bootcamp",
-    date: "2025-06-12",
-    time: "9:30 AM",
-    venue: "Manipal University Jaipur",
-    distance: 7.2,
-    city: "Jaipur",
-    paid: false,
-    price: 0,
-    freebies: ["Certificate", "IoT Kit", "Snacks"],
-    eligibility: ["ECE", "EE", "CSE"],
-    link: "https://qualcomm.com/events",
-    tags: ["IoT", "Embedded"],
-    totalSeats: 90,
-    taken: 34,
-  },
-  {
-    id: 10,
-    company: "Meta",
-    logo: "Me",
-    color: "#1877F2",
-    type: "Hackathon",
-    mode: "hybrid",
-    title: "Open Source Contribution Sprint",
-    date: "2025-07-05",
-    time: "10:00 AM",
-    venue: "Jaipur Innovation Hub + Online",
-    distance: 3.0,
-    city: "Jaipur",
-    paid: false,
-    price: 0,
-    freebies: ["Certificate", "Meta Swag", "Mentorship Session"],
-    eligibility: ["CSE", "IT", "All Branches"],
-    link: "https://meta.com/events",
-    tags: ["OpenSource", "Dev"],
-    totalSeats: 200,
-    taken: 57,
-  },
-  {
-    id: 11,
-    company: "NVIDIA",
-    logo: "N",
-    color: "#76B900",
-    type: "Workshop",
-    mode: "virtual",
-    title: "Deep Learning with CUDA",
-    date: "2025-06-28",
-    time: "9:00 AM",
-    venue: "Online (Teams)",
-    distance: 0,
-    city: "Online",
-    paid: true,
-    price: 149,
-    freebies: ["Certificate", "NVIDIA Developer Kit"],
-    eligibility: ["CSE", "IT", "Data Science"],
-    link: "https://nvidia.com/events",
-    tags: ["AI", "GPU"],
-    totalSeats: 75,
-    taken: 60,
-  },
-  {
-    id: 12,
-    company: "Cisco",
-    logo: "C",
-    color: "#1BA0D7",
-    type: "Seminar",
-    mode: "offline",
-    title: "Networking Fundamentals Day",
-    date: "2025-06-30",
-    time: "2:00 PM",
-    venue: "Apex University, Jaipur",
-    distance: 4.9,
-    city: "Jaipur",
-    paid: false,
-    price: 0,
-    freebies: ["Certificate", "Cisco NetAcad Access"],
-    eligibility: ["CSE", "ECE", "IT"],
-    link: "https://cisco.com/events",
-    tags: ["Networking", "CCNA"],
-    totalSeats: 180,
-    taken: 43,
-  },
-];
-
 const TYPE_ICONS = { Workshop: "🔧", Hackathon: "💻", Seminar: "📊" };
 const TYPE_COLORS = {
   Workshop: "#6366f1",
   Hackathon: "#f97316",
   Seminar: "#10b981",
 };
-const ALL_TAGS = [...new Set(events.flatMap((e) => e.tags))];
 const BRANCH_OPTIONS = [
   "CSE",
   "IT",
@@ -310,7 +43,6 @@ const BRANCH_OPTIONS = [
   "Design",
   "Data Science",
 ];
-const CITIES = [...new Set(events.map((e) => e.city))];
 
 const css = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -790,6 +522,11 @@ function EventCard({ event, squadBranches, onShare }) {
 }
 
 export default function App() {
+  const { data: events = [], isLoading, isError, error } = useEvents();
+
+  const ALL_TAGS = useMemo(() => [...new Set(events.flatMap((e) => e.tags))], [events]);
+  const CITIES = useMemo(() => [...new Set(events.map((e) => e.city))], [events]);
+
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("All");
   const [maxDist, setMaxDist] = useState(100);
@@ -850,6 +587,7 @@ export default function App() {
       out.sort((a, b) => b.taken / b.totalSeats - a.taken / a.totalSeats);
     return out;
   }, [
+    events,
     search,
     city,
     maxDist,
@@ -874,6 +612,29 @@ export default function App() {
     filtered.length > 0
       ? Math.max(...filtered.map((e) => swagScore(e.freebies)))
       : 0;
+
+  if (isLoading) {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f8fafc", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+        <div style={{ textAlign: "center", color: "#64748b" }}>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>⏳</div>
+          <p style={{ fontSize: 14 }}>Loading events from Supabase…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f8fafc", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+        <div style={{ textAlign: "center", color: "#ef4444", maxWidth: 400, padding: "0 24px" }}>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>⚠️</div>
+          <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>Failed to load events</p>
+          <p style={{ fontSize: 12, color: "#94a3b8" }}>{error?.message}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -1397,7 +1158,7 @@ export default function App() {
             marginTop: 24,
           }}
         >
-          MeetMinds · Prototype v0.4 · Real data coming soon
+          MeetMinds · Prototype v0.4 · Live data via Supabase
         </p>
       </div>
     </div>

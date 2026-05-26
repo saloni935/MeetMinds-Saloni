@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, Shield, Layers, Globe, Code2, Sparkles } from "lucide-react";
+import { ArrowRight, Zap, Shield, Layers, Globe, Code2, Sparkles, Calendar, MapPin, Clock, AlertCircle, Loader2 } from "lucide-react";
+import { useEvents } from "@/hooks/use-events";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -49,6 +50,150 @@ const stats = [
   { value: "Zero", label: "Config needed" },
 ];
 
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function formatTime(dateStr: string) {
+  return new Date(dateStr).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+function EventsSection() {
+  const { data: events, isLoading, isError, error } = useEvents();
+
+  return (
+    <section id="events" className="py-24 px-6 border-t border-border/50">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          custom={0}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          className="flex items-center justify-between mb-12"
+        >
+          <div>
+            <h2
+              className="font-serif text-3xl sm:text-4xl font-bold mb-3"
+              data-testid="events-heading"
+            >
+              Upcoming Events
+            </h2>
+            <p className="text-muted-foreground">
+              Live from Supabase — always up to date.
+            </p>
+          </div>
+          <div
+            className="hidden sm:flex items-center gap-1.5 text-xs text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full"
+            data-testid="events-live-badge"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            Live data
+          </div>
+        </motion.div>
+
+        {isLoading && (
+          <div className="flex items-center justify-center py-20 gap-3 text-muted-foreground" data-testid="events-loading">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span className="text-sm">Loading events...</span>
+          </div>
+        )}
+
+        {isError && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center gap-3 p-4 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive text-sm"
+            data-testid="events-error"
+          >
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error?.message ?? "Failed to load events."}</span>
+          </motion.div>
+        )}
+
+        {!isLoading && !isError && events && events.length === 0 && (
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            custom={0}
+            className="text-center py-20 text-muted-foreground"
+            data-testid="events-empty"
+          >
+            <Calendar className="w-10 h-10 mx-auto mb-3 opacity-30" />
+            <p className="text-sm">No upcoming events yet.</p>
+            <p className="text-xs mt-1 opacity-60">Add rows to the <code className="font-mono bg-muted px-1 py-0.5 rounded">events</code> table in Supabase to see them here.</p>
+          </motion.div>
+        )}
+
+        {!isLoading && !isError && events && events.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {events.map((event, i) => (
+              <motion.div
+                key={event.id}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="group p-5 rounded-2xl border border-border bg-card hover:border-primary/40 transition-all duration-300 flex flex-col gap-4"
+                data-testid={`event-card-${event.id}`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                    <Calendar className="w-5 h-5 text-primary" />
+                  </div>
+                  <span className="text-xs text-muted-foreground mt-1">
+                    {formatDate(event.starts_at)}
+                  </span>
+                </div>
+
+                <div className="flex-1">
+                  <h3
+                    className="font-semibold text-foreground leading-snug mb-1"
+                    data-testid={`event-title-${event.id}`}
+                  >
+                    {event.title}
+                  </h3>
+                  {event.description && (
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                      {event.description}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-1.5 pt-1 border-t border-border/50">
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground" data-testid={`event-time-${event.id}`}>
+                    <Clock className="w-3.5 h-3.5 shrink-0" />
+                    <span>
+                      {formatTime(event.starts_at)}
+                      {event.ends_at && ` — ${formatTime(event.ends_at)}`}
+                    </span>
+                  </div>
+                  {event.location && (
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground" data-testid={`event-location-${event.id}`}>
+                      <MapPin className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">{event.location}</span>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -65,6 +210,13 @@ export default function Home() {
               data-testid="nav-features"
             >
               Features
+            </a>
+            <a
+              href="#events"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              data-testid="nav-events"
+            >
+              Events
             </a>
             <button
               className="text-sm px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary"
@@ -213,6 +365,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Live Events from Supabase */}
+      <EventsSection />
+
       {/* CTA */}
       <section className="py-24 px-6">
         <motion.div
@@ -246,7 +401,7 @@ export default function Home() {
             MyApp
           </span>
           <p className="text-xs text-muted-foreground">
-            Built with React, Vite, and Tailwind CSS.
+            Built with React, Vite, Tailwind CSS, and Supabase.
           </p>
         </div>
       </footer>
