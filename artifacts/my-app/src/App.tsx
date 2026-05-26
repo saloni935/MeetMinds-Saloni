@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useEvents } from "@/hooks/use-events";
 import AdminPanel from "@/components/admin-panel";
+import AdminLogin from "@/components/admin-login";
 
 const FREEBIE_VALUE = {
   Certificate: 200,
@@ -524,6 +525,9 @@ function EventCard({ event, squadBranches, onShare }) {
 
 export default function App() {
   const [showAdmin, setShowAdmin] = useState(false);
+  const [adminAuthed, setAdminAuthed] = useState(
+    () => sessionStorage.getItem("meetminds_admin") === "1"
+  );
   const { data: events = [], isLoading, isError, error } = useEvents();
 
   const ALL_TAGS = useMemo(() => [...new Set(events.flatMap((e) => e.tags))], [events]);
@@ -1171,7 +1175,15 @@ export default function App() {
         </p>
       </div>
     </div>
-    {showAdmin && <AdminPanel onClose={() => setShowAdmin(false)} />}
+    {showAdmin && !adminAuthed && (
+      <AdminLogin
+        onSuccess={() => { setAdminAuthed(true); }}
+        onClose={() => setShowAdmin(false)}
+      />
+    )}
+    {showAdmin && adminAuthed && (
+      <AdminPanel onClose={() => { setShowAdmin(false); }} />
+    )}
     </>
   );
 }
