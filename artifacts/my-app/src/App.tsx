@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useEvents } from "@/hooks/use-events";
+import AdminPanel from "@/components/admin-panel";
 
 const FREEBIE_VALUE = {
   Certificate: 200,
@@ -522,6 +523,7 @@ function EventCard({ event, squadBranches, onShare }) {
 }
 
 export default function App() {
+  const [showAdmin, setShowAdmin] = useState(false);
   const { data: events = [], isLoading, isError, error } = useEvents();
 
   const ALL_TAGS = useMemo(() => [...new Set(events.flatMap((e) => e.tags))], [events]);
@@ -637,6 +639,7 @@ export default function App() {
   }
 
   return (
+    <>
     <div
       style={{
         background: "#f8fafc",
@@ -1158,9 +1161,17 @@ export default function App() {
             marginTop: 24,
           }}
         >
-          MeetMinds · Prototype v0.4 · Live data via Supabase
+          MeetMinds · Prototype v0.4 · Live data via Supabase ·{" "}
+          <button
+            onClick={() => setShowAdmin(true)}
+            style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 12, cursor: "pointer", textDecoration: "underline", padding: 0 }}
+          >
+            Admin
+          </button>
         </p>
       </div>
     </div>
+    {showAdmin && <AdminPanel onClose={() => setShowAdmin(false)} />}
+    </>
   );
 }
