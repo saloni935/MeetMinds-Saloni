@@ -1182,7 +1182,14 @@ export default function App() {
       />
     )}
     {showAdmin && adminAuthed && (
-      <AdminPanel onClose={() => { setShowAdmin(false); }} />
+      <AdminPanel
+        onClose={() => setShowAdmin(false)}
+        onLogout={() => {
+          sessionStorage.removeItem("meetminds_admin");
+          setAdminAuthed(false);
+          setShowAdmin(false);
+        }}
+      />
     )}
     </>
   );

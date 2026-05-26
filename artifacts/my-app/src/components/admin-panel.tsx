@@ -315,9 +315,10 @@ function ConfirmDelete({ eventTitle, onConfirm, onCancel, deleting }: ConfirmDel
 
 interface AdminPanelProps {
   onClose: () => void;
+  onLogout: () => void;
 }
 
-export default function AdminPanel({ onClose }: AdminPanelProps) {
+export default function AdminPanel({ onClose, onLogout }: AdminPanelProps) {
   const { data: events = [], isLoading } = useEvents();
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
@@ -416,6 +417,13 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
               data-testid="button-close-admin"
             >
               ← Back to app
+            </button>
+            <button
+              onClick={onLogout}
+              style={{ padding: "8px 14px", borderRadius: 9, border: "1px solid #fca5a5", background: "#fef2f2", color: "#dc2626", fontSize: 13, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 5 }}
+              data-testid="button-logout"
+            >
+              🔒 Logout
             </button>
           </div>
         </div>
