@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useEvents } from "@/hooks/use-events";
 import AdminPanel from "@/components/admin-panel";
 import AdminLogin from "@/components/admin-login";
+import { useRsvp } from "@/hooks/use-event-mutations";
 
 const FREEBIE_VALUE = {
   Certificate: 200,
@@ -290,7 +291,7 @@ function ShareModal({ event, onClose }) {
   );
 }
 
-function EventCard({ event, squadBranches, onShare }) {
+function EventCard({ event, squadBranches, onShare, onRsvp, rsvped }) {
   const squadMatch =
     squadBranches.length === 0 ||
     squadBranches.every(
@@ -467,6 +468,27 @@ function EventCard({ event, squadBranches, onShare }) {
       </div>
 
       {/* Actions */}
+      <button
+        onClick={() => !rsvped && onRsvp(event.id, event.taken)}
+        disabled={rsvped}
+        style={{
+          width: "100%",
+          padding: "8px 0",
+          borderRadius: 9,
+          border: rsvped ? "none" : "1.5px solid #10b981",
+          background: rsvped ? "#dcfce7" : "#f0fdf4",
+          color: rsvped ? "#15803d" : "#059669",
+          fontSize: 12,
+          fontWeight: 600,
+          cursor: rsvped ? "default" : "pointer",
+          marginBottom: 6,
+          transition: "background 0.2s, transform 0.1s",
+        }}
+        onMouseEnter={(e) => { if (!rsvped) (e.currentTarget as HTMLButtonElement).style.background = "#dcfce7"; }}
+        onMouseLeave={(e) => { if (!rsvped) (e.currentTarget as HTMLButtonElement).style.background = "#f0fdf4"; }}
+      >
+        {rsvped ? "✅ You're going!" : "🙋 I'm going"}
+      </button>
       <div style={{ display: "flex", gap: 6 }}>
         <a
           href={event.link}
@@ -528,6 +550,19 @@ export default function App() {
   const [adminAuthed, setAdminAuthed] = useState(
     () => sessionStorage.getItem("meetminds_admin") === "1"
   );
+  const [rsvpedIds, setRsvpedIds] = useState<Set<number>>(
+    () => new Set(JSON.parse(localStorage.getItem("meetminds_rsvp") || "[]"))
+  );
+  const rsvpMutation = useRsvp();
+
+  function handleRsvp(eventId: number, currentTaken: number) {
+    if (rsvpedIds.has(eventId)) return;
+    rsvpMutation.mutate({ id: eventId, taken: currentTaken });
+    const next = new Set(rsvpedIds);
+    next.add(eventId);
+    setRsvpedIds(next);
+    localStorage.setItem("meetminds_rsvp", JSON.stringify([...next]));
+  }
   const { data: events = [], isLoading, isError, error } = useEvents();
 
   const ALL_TAGS = useMemo(() => [...new Set(events.flatMap((e) => e.tags))], [events]);
@@ -1152,6 +1187,8 @@ export default function App() {
                 event={e}
                 squadBranches={activeBranches}
                 onShare={setShareEvent}
+                onRsvp={handleRsvp}
+                rsvped={rsvpedIds.has(e.id)}
               />
             ))}
           </div>

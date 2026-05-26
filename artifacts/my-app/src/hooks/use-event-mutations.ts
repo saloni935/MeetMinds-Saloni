@@ -84,6 +84,20 @@ export function useDeleteEvent() {
   });
 }
 
+export function useRsvp() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, taken }: { id: number; taken: number }) => {
+      const { error } = await supabase
+        .from("events")
+        .update({ taken: taken + 1 })
+        .eq("id", id);
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["events"] }),
+  });
+}
+
 export function toEventInput(event: Event): EventInput {
   return {
     company: event.company,
