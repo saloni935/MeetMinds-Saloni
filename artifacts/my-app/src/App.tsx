@@ -554,6 +554,20 @@ function EventCard({
             href={event.link}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={async (e) =>{}}
+            e.preventDefault();
+
+              try {
+                const response = await fetch(event.link, {
+                  method: "HEAD",
+                  mode: "no-cors",
+                });
+
+                window.open(event.link, "_blank");
+              } catch (error) {
+                alert("Registration link is broken or expired.");
+              }
+            }}
             style={{
               flex: 1,
               display: "flex",
