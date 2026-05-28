@@ -490,27 +490,49 @@ function EventCard({ event, squadBranches, onShare, onRsvp, rsvped }) {
         {rsvped ? "✅ You're going!" : "🙋 I'm going"}
       </button>
       <div style={{ display: "flex", gap: 6 }}>
-        <a
-          href={event.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 5,
-            background: event.color,
-            color: "#fff",
-            borderRadius: 9,
-            padding: "8px 0",
-            fontSize: 12,
-            fontWeight: 600,
-            textDecoration: "none",
-          }}
-        >
-          🔗 Register
-        </a>
+        {event.link ? (
+          <a
+            href={event.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+              background: event.color,
+              color: "#fff",
+              borderRadius: 9,
+              padding: "8px 0",
+              fontSize: 12,
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+          >
+            🔗 Register
+          </a>
+        ) : (
+          <span
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+              background: "#f1f5f9",
+              color: "#94a3b8",
+              borderRadius: 9,
+              padding: "8px 0",
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: "default",
+              border: "1px solid #e2e8f0",
+            }}
+          >
+            🔗 Link Soon
+          </span>
+        )}
         <button
           onClick={() => onShare(event)}
           title="Share story card"
