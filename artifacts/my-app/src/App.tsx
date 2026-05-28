@@ -547,47 +547,52 @@ function EventCard({
         {rsvped ? "✅ You're going!" : "🙋 I'm going"}
       </button>
 
-      {/* Register / Link Soon / Share / LinkedIn row */}
+      {/* Register / Link Soon */}
       <div style={{ display: "flex", gap: 6 }}>
-        ound: "#f1f5f9",
+        {event.link ? (
+          <a
+            href={event.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+              background: event.color,
+              color: "#fff",
+              borderRadius: 9,
+              padding: "8px 0",
+              fontSize: 12,
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+          >
+            🔗 Register
+          </a>
+        ) : (
+          <span
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+              background: "#f1f5f9",
               color: "#94a3b8",
               borderRadius: 9,
               padding: "8px 0",
-              fontSize:
-        <button
-          onClick={() => {
-            if (
-              event.link &&
-              event.link.startsWith("http")
-            ) {
-              window.open(event.link, "_blank");
-            } else {
-              alert("Registration link unavailable");
-            }
-          }}
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 5,
-            background: event.color || "#4285F4",
-            color: "#fff",
-            borderRadius: 9,
-            padding: "8px 0",
-            fontSize: 12,
-            fontWeight: 600,
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          🔗 Register
-        </button>
+              fontSize: 12,
+              fontWeight: 600,
+              border: "1px solid #e2e8f0",
+              cursor: "default",
+            }}
           >
             🔗 Link Soon
           </span>
         )}
-      )}
+      </div>
       <button
         onClick={async () => {
           try {
