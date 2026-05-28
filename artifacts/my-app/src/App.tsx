@@ -44,14 +44,25 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 const BRANCH_OPTIONS = [
-  "CSE", "IT", "ECE", "EE", "Mechanical",
-  "Civil", "Chemical", "Physics", "Design", "Data Science",
+  "CSE",
+  "IT",
+  "ECE",
+  "EE",
+  "Mechanical",
+  "Civil",
+  "Chemical",
+  "Physics",
+  "Design",
+  "Data Science",
 ];
 
-const MODE_STYLES: Record<string, { color: string; bg: string; label: string }> = {
+const MODE_STYLES: Record<
+  string,
+  { color: string; bg: string; label: string }
+> = {
   offline: { color: "#065f46", bg: "#dcfce7", label: "📍 In-person" },
   virtual: { color: "#1d4ed8", bg: "#dbeafe", label: "💻 Virtual" },
-  hybrid:  { color: "#7c3aed", bg: "#ede9fe", label: "🌐 Hybrid"   },
+  hybrid: { color: "#7c3aed", bg: "#ede9fe", label: "🌐 Hybrid" },
 };
 
 const globalCss = `
@@ -92,17 +103,29 @@ const globalCss = `
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function FomoBar({ taken, total }: { taken: number; total: number }) {
-  const pct   = Math.round((taken / total) * 100);
-  const left  = total - taken;
-  const hot   = pct >= 80;
-  const warm  = pct >= 50;
+  const pct = Math.round((taken / total) * 100);
+  const left = total - taken;
+  const hot = pct >= 80;
+  const warm = pct >= 50;
   const color = hot ? "#ef4444" : warm ? "#f97316" : "#10b981";
-  const label = hot ? "🔥 Filling fast!" : warm ? "📈 Going quick" : "✅ Seats open";
+  const label = hot
+    ? "🔥 Filling fast!"
+    : warm
+      ? "📈 Going quick"
+      : "✅ Seats open";
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 4,
+        }}
+      >
         <span style={{ fontSize: 11, color, fontWeight: 600 }}>{label}</span>
-        <span style={{ fontSize: 11, color: "#94a3b8" }}>{left} left of {total}</span>
+        <span style={{ fontSize: 11, color: "#94a3b8" }}>
+          {left} left of {total}
+        </span>
       </div>
       <div style={{ height: 4, background: "#f1f5f9", borderRadius: 4 }}>
         <div
@@ -122,9 +145,11 @@ function FomoBar({ taken, total }: { taken: number; total: number }) {
 function SwagBadge({ freebies }: { freebies: string[] }) {
   const val = swagScore(freebies);
   const [color, bg] =
-    val >= 2000 ? ["#7c3aed", "#f5f3ff"] :
-    val >= 1000 ? ["#0369a1", "#e0f2fe"] :
-                  ["#065f46", "#dcfce7"];
+    val >= 2000
+      ? ["#7c3aed", "#f5f3ff"]
+      : val >= 1000
+        ? ["#0369a1", "#e0f2fe"]
+        : ["#065f46", "#dcfce7"];
   return (
     <span className="tag" style={{ background: bg, color }}>
       🎁 ₹{val.toLocaleString("en-IN")} in freebies
@@ -134,9 +159,11 @@ function SwagBadge({ freebies }: { freebies: string[] }) {
 
 function ShareModal({ event, onClose }: { event: any; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
-  const val     = swagScore(event.freebies);
+  const val = swagScore(event.freebies);
   const dateStr = new Date(event.date).toLocaleDateString("en-IN", {
-    day: "numeric", month: "short", year: "numeric",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
   const caption = `I'm attending ${event.title} by ${event.company}! ${event.date} · ${event.venue}\nFind free tech events at meetminds.in`;
 
@@ -150,71 +177,144 @@ function ShareModal({ event, onClose }: { event: any; onClose: () => void }) {
     <div
       onClick={onClose}
       style={{
-        position: "fixed", inset: 0,
+        position: "fixed",
+        inset: 0,
         background: "rgba(0,0,0,0.45)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        zIndex: 1000, padding: 16,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        padding: 16,
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "#fff", borderRadius: 18, padding: 24,
-          maxWidth: 340, width: "100%",
+          background: "#fff",
+          borderRadius: 18,
+          padding: 24,
+          maxWidth: 340,
+          width: "100%",
           boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-          <span style={{ fontSize: 14, fontWeight: 600, color: "#1e293b" }}>Story card preview</span>
-          <button onClick={onClose} style={{ fontSize: 20, color: "#94a3b8", lineHeight: 1 }}>×</button>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 14,
+          }}
+        >
+          <span style={{ fontSize: 14, fontWeight: 600, color: "#1e293b" }}>
+            Story card preview
+          </span>
+          <button
+            onClick={onClose}
+            style={{ fontSize: 20, color: "#94a3b8", lineHeight: 1 }}
+          >
+            ×
+          </button>
         </div>
 
         <div
           style={{
             background: event.color + "12",
             border: `2px solid ${event.color}33`,
-            borderRadius: 14, padding: "1.4rem", textAlign: "center",
+            borderRadius: 14,
+            padding: "1.4rem",
+            textAlign: "center",
           }}
         >
           <div
             style={{
-              width: 56, height: 56, borderRadius: 14,
+              width: 56,
+              height: 56,
+              borderRadius: 14,
               background: event.color,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              margin: "0 auto 10px", fontSize: 18, fontWeight: 700, color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 10px",
+              fontSize: 18,
+              fontWeight: 700,
+              color: "#fff",
             }}
           >
             {event.logo}
           </div>
-          <div style={{ fontSize: 11, color: "#64748b", marginBottom: 2 }}>I'm attending</div>
-          <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", lineHeight: 1.3, marginBottom: 6 }}>
+          <div style={{ fontSize: 11, color: "#64748b", marginBottom: 2 }}>
+            I'm attending
+          </div>
+          <div
+            style={{
+              fontSize: 16,
+              fontWeight: 700,
+              color: "#1e293b",
+              lineHeight: 1.3,
+              marginBottom: 6,
+            }}
+          >
             {event.title}
           </div>
           <div style={{ fontSize: 12, color: "#64748b", marginBottom: 10 }}>
             by {event.company} · {dateStr}
           </div>
-          <div style={{ display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap", marginBottom: 10 }}>
-            <span className="tag" style={{ background: event.color + "22", color: event.color }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              justifyContent: "center",
+              flexWrap: "wrap",
+              marginBottom: 10,
+            }}
+          >
+            <span
+              className="tag"
+              style={{ background: event.color + "22", color: event.color }}
+            >
               {event.type}
             </span>
             {!event.paid && (
-              <span className="tag" style={{ background: "#dcfce7", color: "#065f46" }}>Free</span>
+              <span
+                className="tag"
+                style={{ background: "#dcfce7", color: "#065f46" }}
+              >
+                Free
+              </span>
             )}
-            <span className="tag" style={{ background: "#f5f3ff", color: "#7c3aed" }}>
+            <span
+              className="tag"
+              style={{ background: "#f5f3ff", color: "#7c3aed" }}
+            >
               ₹{val.toLocaleString("en-IN")} goodies
             </span>
           </div>
-          <div style={{ fontSize: 11, color: "#94a3b8" }}>meetminds.in · Find yours too!</div>
+          <div style={{ fontSize: 11, color: "#94a3b8" }}>
+            meetminds.in · Find yours too!
+          </div>
         </div>
 
-        <p style={{ fontSize: 12, color: "#64748b", textAlign: "center", margin: "12px 0 8px" }}>
-          Screenshot & share on WhatsApp / Instagram!
+        <p
+          style={{
+            fontSize: 12,
+            color: "#64748b",
+            textAlign: "center",
+            margin: "12px 0 8px",
+          }}
+        >
+          Screenshot &amp; share on WhatsApp / Instagram!
         </p>
         <button
           onClick={copy}
           style={{
-            width: "100%", padding: "10px", borderRadius: 9,
-            background: event.color, color: "#fff", fontSize: 13, fontWeight: 600,
+            width: "100%",
+            padding: "10px",
+            borderRadius: 9,
+            background: event.color,
+            color: "#fff",
+            fontSize: 13,
+            fontWeight: 600,
           }}
         >
           {copied ? "✓ Copied!" : "📋 Copy caption & share"}
@@ -240,19 +340,24 @@ function EventCard({
   const squadMatch =
     squadBranches.length === 0 ||
     squadBranches.every(
-      (b) => event.eligibility.includes(b) || event.eligibility.includes("All Branches")
+      (b) =>
+        event.eligibility.includes(b) ||
+        event.eligibility.includes("All Branches"),
     );
 
   const modeStyle = MODE_STYLES[event.mode] ?? MODE_STYLES.offline;
 
   const dateStr = new Date(event.date).toLocaleDateString("en-IN", {
-    day: "numeric", month: "short",
+    day: "numeric",
+    month: "short",
   });
 
   const copyLinkedIn = () => {
     const val = swagScore(event.freebies);
     const d = new Date(event.date).toLocaleDateString("en-IN", {
-      day: "numeric", month: "short", year: "numeric",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     });
     const post =
       `Just registered for ${event.title} by ${event.company}!\n\n` +
@@ -269,49 +374,109 @@ function EventCard({
       className="card"
       style={{
         opacity: squadBranches.length > 0 && !squadMatch ? 0.35 : 1,
-        borderColor: squadBranches.length > 0 && !squadMatch ? "#fca5a5" : "#e2e8f0",
+        borderColor:
+          squadBranches.length > 0 && !squadMatch ? "#fca5a5" : "#e2e8f0",
       }}
     >
       {/* Header row */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 10,
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
             style={{
-              width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              flexShrink: 0,
               background: event.color + "18",
               border: `1.5px solid ${event.color}33`,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 13, fontWeight: 700, color: event.color,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 13,
+              fontWeight: 700,
+              color: event.color,
             }}
           >
             {event.logo}
           </div>
           <div>
-            <div style={{ fontSize: 11, color: "#94a3b8" }}>{event.company} · {dateStr}</div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "#1e293b", lineHeight: 1.3 }}>
+            <div style={{ fontSize: 11, color: "#94a3b8" }}>
+              {event.company} · {dateStr}
+            </div>
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#1e293b",
+                lineHeight: 1.3,
+              }}
+            >
               {event.title}
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "flex-end", flexShrink: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+            alignItems: "flex-end",
+            flexShrink: 0,
+          }}
+        >
           <span
             className="tag"
-            style={{ background: TYPE_COLORS[event.type] + "18", color: TYPE_COLORS[event.type] }}
+            style={{
+              background: TYPE_COLORS[event.type] + "18",
+              color: TYPE_COLORS[event.type],
+            }}
           >
             {TYPE_ICONS[event.type]} {event.type}
           </span>
-          <span className="tag" style={{ background: modeStyle.bg, color: modeStyle.color }}>
+          <span
+            className="tag"
+            style={{ background: modeStyle.bg, color: modeStyle.color }}
+          >
             {modeStyle.label}
           </span>
         </div>
       </div>
 
       {/* Time & location */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 8px" }}>
-        <span style={{ fontSize: 11, color: "#64748b", display: "flex", alignItems: "center", gap: 4 }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "4px 8px",
+        }}
+      >
+        <span
+          style={{
+            fontSize: 11,
+            color: "#64748b",
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+          }}
+        >
           🕐 {event.time}
         </span>
-        <span style={{ fontSize: 11, color: "#64748b", display: "flex", alignItems: "center", gap: 4 }}>
+        <span
+          style={{
+            fontSize: 11,
+            color: "#64748b",
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+          }}
+        >
           {event.distance > 0 ? `📍 ${event.distance} km away` : "🌐 Online"}
         </span>
       </div>
@@ -320,13 +485,28 @@ function EventCard({
       <FomoBar taken={event.taken} total={event.totalSeats} />
 
       {/* Pricing & freebies */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 5, alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 5,
+          alignItems: "center",
+        }}
+      >
         {event.paid ? (
-          <span className="tag" style={{ background: "#fef3c7", color: "#92400e" }}>
+          <span
+            className="tag"
+            style={{ background: "#fef3c7", color: "#92400e" }}
+          >
             💳 Paid ₹{event.price}
           </span>
         ) : (
-          <span className="tag" style={{ background: "#dcfce7", color: "#065f46" }}>✅ Free</span>
+          <span
+            className="tag"
+            style={{ background: "#dcfce7", color: "#065f46" }}
+          >
+            ✅ Free
+          </span>
         )}
         {event.freebies.length > 0 && <SwagBadge freebies={event.freebies} />}
       </div>
@@ -338,22 +518,30 @@ function EventCard({
 
       {/* RSVP button */}
       <button
-        onClick={() => { if (!rsvped) onRsvp(event.id, event.taken); }}
+        onClick={() => {
+          if (!rsvped) onRsvp(event.id, event.taken);
+        }}
         disabled={rsvped}
         style={{
-          width: "100%", padding: "8px 0", borderRadius: 9,
+          width: "100%",
+          padding: "8px 0",
+          borderRadius: 9,
           border: rsvped ? "none" : "1.5px solid #10b981",
           background: rsvped ? "#dcfce7" : "#f0fdf4",
           color: rsvped ? "#15803d" : "#059669",
-          fontSize: 12, fontWeight: 600,
+          fontSize: 12,
+          fontWeight: 600,
           cursor: rsvped ? "default" : "pointer",
-          marginBottom: 6, transition: "background 0.2s",
+          marginBottom: 6,
+          transition: "background 0.2s",
         }}
         onMouseEnter={(e) => {
-          if (!rsvped) (e.currentTarget as HTMLButtonElement).style.background = "#dcfce7";
+          if (!rsvped)
+            (e.currentTarget as HTMLButtonElement).style.background = "#dcfce7";
         }}
         onMouseLeave={(e) => {
-          if (!rsvped) (e.currentTarget as HTMLButtonElement).style.background = "#f0fdf4";
+          if (!rsvped)
+            (e.currentTarget as HTMLButtonElement).style.background = "#f0fdf4";
         }}
       >
         {rsvped ? "✅ You're going!" : "🙋 I'm going"}
@@ -368,10 +556,17 @@ function EventCard({
             rel="noopener noreferrer"
             style={{
               flex: 1,
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
-              background: event.color, color: "#fff",
-              borderRadius: 9, padding: "8px 0",
-              fontSize: 12, fontWeight: 600, textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+              background: event.color,
+              color: "#fff",
+              borderRadius: 9,
+              padding: "8px 0",
+              fontSize: 12,
+              fontWeight: 600,
+              textDecoration: "none",
             }}
           >
             🔗 Register
@@ -380,11 +575,18 @@ function EventCard({
           <span
             style={{
               flex: 1,
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
-              background: "#f1f5f9", color: "#94a3b8",
-              borderRadius: 9, padding: "8px 0",
-              fontSize: 12, fontWeight: 600,
-              border: "1px solid #e2e8f0", cursor: "default",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+              background: "#f1f5f9",
+              color: "#94a3b8",
+              borderRadius: 9,
+              padding: "8px 0",
+              fontSize: 12,
+              fontWeight: 600,
+              border: "1px solid #e2e8f0",
+              cursor: "default",
             }}
           >
             🔗 Link Soon
@@ -394,9 +596,12 @@ function EventCard({
           onClick={() => onShare(event)}
           title="Share story card"
           style={{
-            padding: "8px 11px", borderRadius: 9,
-            border: "1px solid #e2e8f0", background: "#f8fafc",
-            color: "#64748b", fontSize: 15,
+            padding: "8px 11px",
+            borderRadius: 9,
+            border: "1px solid #e2e8f0",
+            background: "#f8fafc",
+            color: "#64748b",
+            fontSize: 15,
           }}
         >
           📤
@@ -405,9 +610,12 @@ function EventCard({
           onClick={copyLinkedIn}
           title="Copy LinkedIn post"
           style={{
-            padding: "8px 11px", borderRadius: 9,
-            border: "1px solid #c7e0f4", background: "#e8f4fd",
-            color: "#0077b5", fontSize: 15,
+            padding: "8px 11px",
+            borderRadius: 9,
+            border: "1px solid #c7e0f4",
+            background: "#e8f4fd",
+            color: "#0077b5",
+            fontSize: 15,
           }}
         >
           💼
@@ -420,15 +628,13 @@ function EventCard({
 // ─── Main App ─────────────────────────────────────────────────────────────────
 
 export default function App() {
-  // Admin state
-  const [showAdmin, setShowAdmin]     = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
   const [adminAuthed, setAdminAuthed] = useState(
-    () => sessionStorage.getItem("meetminds_admin") === "1"
+    () => sessionStorage.getItem("meetminds_admin") === "1",
   );
 
-  // RSVP state (persisted to localStorage)
   const [rsvpedIds, setRsvpedIds] = useState<Set<number>>(
-    () => new Set(JSON.parse(localStorage.getItem("meetminds_rsvp") || "[]"))
+    () => new Set(JSON.parse(localStorage.getItem("meetminds_rsvp") || "[]")),
   );
   const rsvpMutation = useRsvp();
 
@@ -441,21 +647,27 @@ export default function App() {
     localStorage.setItem("meetminds_rsvp", JSON.stringify([...next]));
   }
 
-  // Data
   const { data: events = [], isLoading, isError, error } = useEvents();
 
-  // Derived constants from data
-  const ALL_TAGS = useMemo(() => [...new Set(events.flatMap((e) => e.tags))], [events]);
-  const CITIES   = useMemo(() => [...new Set(events.map((e) => e.city))],     [events]);
+  const ALL_TAGS = useMemo(
+    () => [...new Set(events.flatMap((e) => e.tags))],
+    [events],
+  );
+  const CITIES = useMemo(
+    () => [...new Set(events.map((e) => e.city))],
+    [events],
+  );
 
-  // Search & suggestion dropdown
-  const [search, setSearch]               = useState("");
+  const [search, setSearch] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchWrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleOutsideClick(e: MouseEvent) {
-      if (searchWrapRef.current && !searchWrapRef.current.contains(e.target as Node)) {
+      if (
+        searchWrapRef.current &&
+        !searchWrapRef.current.contains(e.target as Node)
+      ) {
         setShowSuggestions(false);
       }
     }
@@ -495,28 +707,25 @@ export default function App() {
     return results;
   }, [search, events]);
 
-  // Filters
-  const [city,           setCity]           = useState("All");
-  const [maxDist,        setMaxDist]        = useState(100);
-  const [period,         setPeriod]         = useState("all");
-  const [freeOnly,       setFreeOnly]       = useState(false);
-  const [freebiesOnly,   setFreebiesOnly]   = useState(false);
-  const [selectedTags,   setSelectedTags]   = useState<string[]>([]);
+  const [city, setCity] = useState("All");
+  const [maxDist, setMaxDist] = useState(100);
+  const [period, setPeriod] = useState("all");
+  const [freeOnly, setFreeOnly] = useState(false);
+  const [freebiesOnly, setFreebiesOnly] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedBranch, setSelectedBranch] = useState("All");
-  const [sortBy,         setSortBy]         = useState("fomo");
-  const [eventMode,      setEventMode]      = useState("all");
-  const [showFilters,    setShowFilters]    = useState(false);
-
-  // Share modal
+  const [sortBy, setSortBy] = useState("fomo");
+  const [eventMode, setEventMode] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
   const [shareEvent, setShareEvent] = useState<any>(null);
-
-  // Squad mode
-  const [squadMode,     setSquadMode]     = useState(false);
+  const [squadMode, setSquadMode] = useState(false);
   const [squadBranches, setSquadBranches] = useState([""]);
 
-  const now      = new Date();
-  const weekEnd  = new Date(now); weekEnd.setDate(now.getDate() + 7);
-  const monthEnd = new Date(now); monthEnd.setDate(now.getDate() + 30);
+  const now = new Date();
+  const weekEnd = new Date(now);
+  weekEnd.setDate(now.getDate() + 7);
+  const monthEnd = new Date(now);
+  monthEnd.setDate(now.getDate() + 30);
 
   const filtered = useMemo(() => {
     let out = events.filter((e) => {
@@ -531,44 +740,91 @@ export default function App() {
       }
       if (city !== "All" && e.city !== city) return false;
       if (e.distance > maxDist && e.distance > 0) return false;
-      if (period === "week"  && eDate > weekEnd)  return false;
+      if (period === "week" && eDate > weekEnd) return false;
       if (period === "month" && eDate > monthEnd) return false;
-      if (freeOnly     && e.paid)                 return false;
+      if (freeOnly && e.paid) return false;
       if (freebiesOnly && e.freebies.length === 0) return false;
-      if (selectedTags.length > 0 && !selectedTags.some((t) => e.tags.includes(t))) return false;
+      if (
+        selectedTags.length > 0 &&
+        !selectedTags.some((t) => e.tags.includes(t))
+      )
+        return false;
       if (
         selectedBranch !== "All" &&
         !e.eligibility.includes(selectedBranch) &&
         !e.eligibility.includes("All Branches")
-      ) return false;
+      )
+        return false;
       if (eventMode !== "all" && e.mode !== eventMode) return false;
       return true;
     });
-
-    if (sortBy === "date")     out.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    if (sortBy === "date")
+      out.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      );
     if (sortBy === "distance") out.sort((a, b) => a.distance - b.distance);
-    if (sortBy === "swag")     out.sort((a, b) => swagScore(b.freebies) - swagScore(a.freebies));
-    if (sortBy === "fomo")     out.sort((a, b) => b.taken / b.totalSeats - a.taken / a.totalSeats);
+    if (sortBy === "swag")
+      out.sort((a, b) => swagScore(b.freebies) - swagScore(a.freebies));
+    if (sortBy === "fomo")
+      out.sort((a, b) => b.taken / b.totalSeats - a.taken / a.totalSeats);
     return out;
-  }, [events, search, city, maxDist, period, freeOnly, freebiesOnly, selectedTags, selectedBranch, sortBy, eventMode]);
+  }, [
+    events,
+    search,
+    city,
+    maxDist,
+    period,
+    freeOnly,
+    freebiesOnly,
+    selectedTags,
+    selectedBranch,
+    sortBy,
+    eventMode,
+  ]);
 
   const activeBranches = squadBranches.filter(Boolean);
-  const bestSwag       = filtered.length > 0 ? Math.max(...filtered.map((e) => swagScore(e.freebies))) : 0;
+  const bestSwag =
+    filtered.length > 0
+      ? Math.max(...filtered.map((e) => swagScore(e.freebies)))
+      : 0;
 
-  const Pill = ({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) => (
-    <button className={`pill${active ? " active" : ""}`} onClick={onClick}>{children}</button>
+  const Pill = ({
+    active,
+    onClick,
+    children,
+  }: {
+    active: boolean;
+    onClick: () => void;
+    children: React.ReactNode;
+  }) => (
+    <button className={`pill${active ? " active" : ""}`} onClick={onClick}>
+      {children}
+    </button>
   );
 
   function clearFilters() {
-    setSearch(""); setCity("All"); setFreeOnly(false); setFreebiesOnly(false);
-    setSelectedTags([]); setSelectedBranch("All"); setEventMode("all");
-    setPeriod("all"); setMaxDist(100);
+    setSearch("");
+    setCity("All");
+    setFreeOnly(false);
+    setFreebiesOnly(false);
+    setSelectedTags([]);
+    setSelectedBranch("All");
+    setEventMode("all");
+    setPeriod("all");
+    setMaxDist(100);
   }
 
-  // ── Loading / error screens ──────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f8fafc" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+          background: "#f8fafc",
+        }}
+      >
         <div style={{ textAlign: "center", color: "#64748b" }}>
           <div style={{ fontSize: 32, marginBottom: 12 }}>⏳</div>
           <p style={{ fontSize: 14 }}>Loading events from Supabase…</p>
@@ -579,20 +835,45 @@ export default function App() {
 
   if (isError) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f8fafc" }}>
-        <div style={{ textAlign: "center", color: "#ef4444", maxWidth: 400, padding: "0 24px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+          background: "#f8fafc",
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            color: "#ef4444",
+            maxWidth: 400,
+            padding: "0 24px",
+          }}
+        >
           <div style={{ fontSize: 32, marginBottom: 12 }}>⚠️</div>
-          <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>Failed to load events</p>
-          <p style={{ fontSize: 12, color: "#94a3b8" }}>{(error as Error)?.message}</p>
+          <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
+            Failed to load events
+          </p>
+          <p style={{ fontSize: 12, color: "#94a3b8" }}>
+            {(error as Error)?.message}
+          </p>
         </div>
       </div>
     );
   }
 
-  // ── Main render ──────────────────────────────────────────────────────────
   return (
     <>
-      <div style={{ background: "#f8fafc", minHeight: "100vh", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+      <div
+        style={{
+          background: "#f8fafc",
+          minHeight: "100vh",
+          fontFamily:
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        }}
+      >
         <style>{globalCss}</style>
 
         {shareEvent && (
@@ -600,37 +881,74 @@ export default function App() {
         )}
 
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "20px 16px" }}>
-
           {/* ── Header ── */}
           <div style={{ marginBottom: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                marginBottom: 4,
+              }}
+            >
               <div
                 style={{
-                  width: 36, height: 36, borderRadius: 10,
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
                   background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
-                  display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 18,
                 }}
               >
                 🚀
               </div>
-              <span style={{ fontSize: 22, fontWeight: 700, color: "#1e293b" }}>MeetMinds</span>
-              <span style={{ fontSize: 11, color: "#6366f1", background: "#ede9fe", borderRadius: 6, padding: "2px 8px", fontWeight: 600 }}>
+              <span style={{ fontSize: 22, fontWeight: 700, color: "#1e293b" }}>
+                MeetMinds
+              </span>
+              <span
+                style={{
+                  fontSize: 11,
+                  color: "#6366f1",
+                  background: "#ede9fe",
+                  borderRadius: 6,
+                  padding: "2px 8px",
+                  fontWeight: 600,
+                }}
+              >
                 Beta
               </span>
             </div>
             <p style={{ fontSize: 13, color: "#64748b" }}>
-              Workshops, hackathons &amp; seminars by top MNCs — for engineering students
+              Workshops, hackathons &amp; seminars by top MNCs — for engineering
+              students
             </p>
           </div>
 
           {/* ── Search row ── */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
-            <div ref={searchWrapRef} style={{ flex: 1, minWidth: 180, position: "relative" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              marginBottom: 10,
+              flexWrap: "wrap",
+            }}
+          >
+            <div
+              ref={searchWrapRef}
+              style={{ flex: 1, minWidth: 180, position: "relative" }}
+            >
               <span
                 style={{
-                  position: "absolute", left: 10, top: "50%",
-                  transform: "translateY(-50%)", fontSize: 15,
-                  pointerEvents: "none", zIndex: 1,
+                  position: "absolute",
+                  left: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  fontSize: 15,
+                  pointerEvents: "none",
+                  zIndex: 1,
                 }}
               >
                 🔍
@@ -639,18 +957,29 @@ export default function App() {
                 type="text"
                 placeholder="Search events, companies, topics..."
                 value={search}
-                onChange={(e) => { setSearch(e.target.value); setShowSuggestions(true); }}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setShowSuggestions(true);
+                }}
                 onFocus={() => setShowSuggestions(true)}
-                onKeyDown={(e) => { if (e.key === "Escape") setShowSuggestions(false); }}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setShowSuggestions(false);
+                }}
                 style={{ width: "100%", paddingLeft: 34 }}
               />
               {showSuggestions && suggestions.length > 0 && (
                 <div
                   style={{
-                    position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0,
-                    background: "#fff", border: "1px solid #e2e8f0",
-                    borderRadius: 10, boxShadow: "0 8px 24px rgba(0,0,0,0.10)",
-                    zIndex: 200, overflow: "hidden",
+                    position: "absolute",
+                    top: "calc(100% + 4px)",
+                    left: 0,
+                    right: 0,
+                    background: "#fff",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: 10,
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.10)",
+                    zIndex: 200,
+                    overflow: "hidden",
                   }}
                 >
                   {suggestions.map((s, i) => (
@@ -662,21 +991,49 @@ export default function App() {
                         setShowSuggestions(false);
                       }}
                       style={{
-                        display: "flex", alignItems: "center", gap: 10,
-                        width: "100%", padding: "9px 12px",
-                        background: "none", border: "none",
-                        borderBottom: i < suggestions.length - 1 ? "1px solid #f1f5f9" : "none",
-                        cursor: "pointer", textAlign: "left",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        width: "100%",
+                        padding: "9px 12px",
+                        background: "none",
+                        border: "none",
+                        borderBottom:
+                          i < suggestions.length - 1
+                            ? "1px solid #f1f5f9"
+                            : "none",
+                        cursor: "pointer",
+                        textAlign: "left",
                       }}
-                      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "#f8fafc"; }}
-                      onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "none"; }}
+                      onMouseEnter={(e) => {
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.background = "#f8fafc";
+                      }}
+                      onMouseLeave={(e) => {
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.background = "none";
+                      }}
                     >
                       <span style={{ fontSize: 14 }}>🔍</span>
                       <span style={{ flex: 1, minWidth: 0 }}>
-                        <span style={{ fontSize: 13, fontWeight: 500, color: "#1e293b", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <span
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 500,
+                            color: "#1e293b",
+                            display: "block",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
                           {s.label}
                         </span>
-                        <span style={{ fontSize: 11, color: "#94a3b8" }}>{s.sub}</span>
+                        <span style={{ fontSize: 11, color: "#94a3b8" }}>
+                          {s.sub}
+                        </span>
                       </span>
                     </button>
                   ))}
@@ -686,7 +1043,9 @@ export default function App() {
 
             <select value={city} onChange={(e) => setCity(e.target.value)}>
               <option value="All">All Cities</option>
-              {CITIES.map((c) => <option key={c}>{c}</option>)}
+              {CITIES.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
             </select>
 
             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
@@ -699,11 +1058,16 @@ export default function App() {
             <button
               onClick={() => setShowFilters((f) => !f)}
               style={{
-                padding: "8px 14px", borderRadius: 8, border: "1px solid #e2e8f0",
+                padding: "8px 14px",
+                borderRadius: 8,
+                border: "1px solid #e2e8f0",
                 background: showFilters ? "#ede9fe" : "#fff",
                 color: showFilters ? "#6366f1" : "#64748b",
-                fontSize: 13, fontWeight: 500,
-                display: "flex", alignItems: "center", gap: 6,
+                fontSize: 13,
+                fontWeight: 500,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
               }}
             >
               ⚙️ Filters {showFilters ? "▲" : "▼"}
@@ -715,26 +1079,48 @@ export default function App() {
             style={{
               background: squadMode ? "#eef2ff" : "#fff",
               border: `1px solid ${squadMode ? "#6366f1" : "#e2e8f0"}`,
-              borderRadius: 12, padding: "10px 14px", marginBottom: 10,
+              borderRadius: 12,
+              padding: "10px 14px",
+              marginBottom: 10,
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 8,
+              }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ fontSize: 18 }}>👥</span>
                 <div>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "#1e293b" }}>Squad Mode</span>
-                  <span style={{ fontSize: 12, color: "#64748b", marginLeft: 8 }}>
+                  <span
+                    style={{ fontSize: 13, fontWeight: 600, color: "#1e293b" }}
+                  >
+                    Squad Mode
+                  </span>
+                  <span
+                    style={{ fontSize: 12, color: "#64748b", marginLeft: 8 }}
+                  >
                     Find events where your whole group qualifies
                   </span>
                 </div>
               </div>
               <button
-                onClick={() => { setSquadMode((s) => !s); if (squadMode) setSquadBranches([""]); }}
+                onClick={() => {
+                  setSquadMode((s) => !s);
+                  if (squadMode) setSquadBranches([""]);
+                }}
                 style={{
-                  fontSize: 12, padding: "6px 14px", borderRadius: 8,
+                  fontSize: 12,
+                  padding: "6px 14px",
+                  borderRadius: 8,
                   background: squadMode ? "#6366f1" : "transparent",
                   color: squadMode ? "#fff" : "#64748b",
-                  border: "1px solid #e2e8f0", fontWeight: 500,
+                  border: "1px solid #e2e8f0",
+                  fontWeight: 500,
                 }}
               >
                 {squadMode ? "Exit squad mode" : "Enable squad mode"}
@@ -742,10 +1128,23 @@ export default function App() {
             </div>
 
             {squadMode && (
-              <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: "#64748b" }}>Branches in your squad:</span>
+              <div
+                style={{
+                  marginTop: 10,
+                  display: "flex",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ fontSize: 12, color: "#64748b" }}>
+                  Branches in your squad:
+                </span>
                 {squadBranches.map((b, i) => (
-                  <div key={i} style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                  <div
+                    key={i}
+                    style={{ display: "flex", gap: 4, alignItems: "center" }}
+                  >
                     <select
                       value={b}
                       onChange={(e) => {
@@ -753,15 +1152,30 @@ export default function App() {
                         n[i] = e.target.value;
                         setSquadBranches(n);
                       }}
-                      style={{ fontSize: 12, padding: "4px 8px", borderRadius: 6, minWidth: 90 }}
+                      style={{
+                        fontSize: 12,
+                        padding: "4px 8px",
+                        borderRadius: 6,
+                        minWidth: 90,
+                      }}
                     >
                       <option value="">Pick branch</option>
-                      {BRANCH_OPTIONS.map((br) => <option key={br}>{br}</option>)}
+                      {BRANCH_OPTIONS.map((br) => (
+                        <option key={br}>{br}</option>
+                      ))}
                     </select>
                     {squadBranches.length > 1 && (
                       <button
-                        onClick={() => setSquadBranches(squadBranches.filter((_, j) => j !== i))}
-                        style={{ color: "#94a3b8", fontSize: 16, fontWeight: 700 }}
+                        onClick={() =>
+                          setSquadBranches(
+                            squadBranches.filter((_, j) => j !== i),
+                          )
+                        }
+                        style={{
+                          color: "#94a3b8",
+                          fontSize: 16,
+                          fontWeight: 700,
+                        }}
                       >
                         ×
                       </button>
@@ -772,16 +1186,22 @@ export default function App() {
                   <button
                     onClick={() => setSquadBranches([...squadBranches, ""])}
                     style={{
-                      fontSize: 12, padding: "5px 12px", borderRadius: 7,
-                      border: "1px solid #e2e8f0", background: "#fff",
-                      color: "#64748b", fontWeight: 500,
+                      fontSize: 12,
+                      padding: "5px 12px",
+                      borderRadius: 7,
+                      border: "1px solid #e2e8f0",
+                      background: "#fff",
+                      color: "#64748b",
+                      fontWeight: 500,
                     }}
                   >
                     + Add friend
                   </button>
                 )}
                 {activeBranches.length > 0 && (
-                  <span style={{ fontSize: 12, color: "#6366f1", fontWeight: 600 }}>
+                  <span
+                    style={{ fontSize: 12, color: "#6366f1", fontWeight: 600 }}
+                  >
                     Showing: {activeBranches.join(" + ")}
                   </span>
                 )}
@@ -793,59 +1213,161 @@ export default function App() {
           {showFilters && (
             <div
               style={{
-                background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12,
-                padding: 16, marginBottom: 10,
-                display: "flex", flexDirection: "column", gap: 12,
+                background: "#fff",
+                border: "1px solid #e2e8f0",
+                borderRadius: 12,
+                padding: 16,
+                marginBottom: 10,
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>📍 Distance</span>
+                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>
+                  📍 Distance
+                </span>
                 <input
-                  type="range" min={1} max={150} value={maxDist}
+                  type="range"
+                  min={1}
+                  max={150}
+                  value={maxDist}
                   onChange={(e) => setMaxDist(Number(e.target.value))}
                   style={{ flex: 1, accentColor: "#6366f1" }}
                 />
-                <span style={{ fontSize: 12, fontWeight: 600, minWidth: 55, color: "#1e293b" }}>
+                <span
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    minWidth: 55,
+                    color: "#1e293b",
+                  }}
+                >
                   ≤ {maxDist} km
                 </span>
               </div>
 
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>📅 Period</span>
-                {([ ["all","Any time"], ["week","This week"], ["month","This month"] ] as [string,string][]).map(([v, l]) => (
-                  <Pill key={v} active={period === v} onClick={() => setPeriod(v)}>{l}</Pill>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>
+                  📅 Period
+                </span>
+                {(
+                  [
+                    ["all", "Any time"],
+                    ["week", "This week"],
+                    ["month", "This month"],
+                  ] as [string, string][]
+                ).map(([v, l]) => (
+                  <Pill
+                    key={v}
+                    active={period === v}
+                    onClick={() => setPeriod(v)}
+                  >
+                    {l}
+                  </Pill>
                 ))}
               </div>
 
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>🌐 Mode</span>
-                {([ ["all","All"], ["offline","In-person"], ["virtual","Virtual"], ["hybrid","Hybrid"] ] as [string,string][]).map(([v, l]) => (
-                  <Pill key={v} active={eventMode === v} onClick={() => setEventMode(v)}>{l}</Pill>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>
+                  🌐 Mode
+                </span>
+                {(
+                  [
+                    ["all", "All"],
+                    ["offline", "In-person"],
+                    ["virtual", "Virtual"],
+                    ["hybrid", "Hybrid"],
+                  ] as [string, string][]
+                ).map(([v, l]) => (
+                  <Pill
+                    key={v}
+                    active={eventMode === v}
+                    onClick={() => setEventMode(v)}
+                  >
+                    {l}
+                  </Pill>
                 ))}
               </div>
 
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>🏷️ Type</span>
-                <Pill active={freeOnly}     onClick={() => setFreeOnly((f) => !f)}>✅ Free only</Pill>
-                <Pill active={freebiesOnly} onClick={() => setFreebiesOnly((f) => !f)}>🎁 Has freebies</Pill>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>
+                  🏷️ Type
+                </span>
+                <Pill active={freeOnly} onClick={() => setFreeOnly((f) => !f)}>
+                  ✅ Free only
+                </Pill>
+                <Pill
+                  active={freebiesOnly}
+                  onClick={() => setFreebiesOnly((f) => !f)}
+                >
+                  🎁 Has freebies
+                </Pill>
               </div>
 
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>🎓 Branch</span>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>
+                  🎓 Branch
+                </span>
                 {["All", ...BRANCH_OPTIONS.slice(0, 7)].map((b) => (
-                  <Pill key={b} active={selectedBranch === b} onClick={() => setSelectedBranch(b)}>{b}</Pill>
+                  <Pill
+                    key={b}
+                    active={selectedBranch === b}
+                    onClick={() => setSelectedBranch(b)}
+                  >
+                    {b}
+                  </Pill>
                 ))}
               </div>
 
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}># Topics</span>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ fontSize: 12, color: "#64748b", minWidth: 76 }}>
+                  # Topics
+                </span>
                 {ALL_TAGS.map((t) => (
                   <Pill
                     key={t}
                     active={selectedTags.includes(t)}
                     onClick={() =>
                       setSelectedTags((prev) =>
-                        prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]
+                        prev.includes(t)
+                          ? prev.filter((x) => x !== t)
+                          : [...prev, t],
                       )
                     }
                   >
@@ -857,16 +1379,49 @@ export default function App() {
           )}
 
           {/* ── Stats bar ── */}
-          <div className="stats-row" style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+          <div
+            className="stats-row"
+            style={{
+              display: "flex",
+              gap: 8,
+              marginBottom: 16,
+              flexWrap: "wrap",
+            }}
+          >
             {[
-              { label: "Events",       val: filtered.length,                                         icon: "📅", color: "#6366f1" },
-              { label: "Free",         val: filtered.filter((e) => !e.paid).length,                  icon: "✅", color: "#10b981" },
-              { label: "With freebies",val: filtered.filter((e) => e.freebies.length > 0).length,    icon: "🎁", color: "#f97316" },
-              { label: "Best swag",    val: filtered.length > 0 ? "₹" + bestSwag.toLocaleString("en-IN") : "—", icon: "🏆", color: "#8b5cf6" },
+              {
+                label: "Events",
+                val: filtered.length,
+                icon: "📅",
+                color: "#6366f1",
+              },
+              {
+                label: "Free",
+                val: filtered.filter((e) => !e.paid).length,
+                icon: "✅",
+                color: "#10b981",
+              },
+              {
+                label: "With freebies",
+                val: filtered.filter((e) => e.freebies.length > 0).length,
+                icon: "🎁",
+                color: "#f97316",
+              },
+              {
+                label: "Best swag",
+                val:
+                  filtered.length > 0
+                    ? "₹" + bestSwag.toLocaleString("en-IN")
+                    : "—",
+                icon: "🏆",
+                color: "#8b5cf6",
+              },
             ].map(({ label, val, icon, color }) => (
               <div key={label} className="stat-box">
                 <span style={{ fontSize: 16 }}>{icon}</span>
-                <span style={{ fontSize: 18, fontWeight: 700, color }}>{val}</span>
+                <span style={{ fontSize: 18, fontWeight: 700, color }}>
+                  {val}
+                </span>
                 <span style={{ fontSize: 12, color: "#64748b" }}>{label}</span>
               </div>
             ))}
@@ -874,12 +1429,22 @@ export default function App() {
 
           {/* ── Event grid ── */}
           {filtered.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "3rem", color: "#94a3b8" }}>
+            <div
+              style={{ textAlign: "center", padding: "3rem", color: "#94a3b8" }}
+            >
               <div style={{ fontSize: 48, marginBottom: 12 }}>😕</div>
               <p style={{ fontSize: 15 }}>No events match your filters.</p>
               <button
                 onClick={clearFilters}
-                style={{ marginTop: 12, padding: "8px 18px", borderRadius: 8, background: "#6366f1", color: "#fff", fontSize: 13, fontWeight: 600 }}
+                style={{
+                  marginTop: 12,
+                  padding: "8px 18px",
+                  borderRadius: 8,
+                  background: "#6366f1",
+                  color: "#fff",
+                  fontSize: 13,
+                  fontWeight: 600,
+                }}
               >
                 Clear filters
               </button>
@@ -887,7 +1452,11 @@ export default function App() {
           ) : (
             <div
               className="grid"
-              style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 12 }}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))",
+                gap: 12,
+              }}
             >
               {filtered.map((e) => (
                 <EventCard
@@ -903,16 +1472,30 @@ export default function App() {
           )}
 
           {/* ── Footer ── */}
-          <p style={{ textAlign: "center", fontSize: 12, color: "#cbd5e1", marginTop: 24 }}>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: 12,
+              color: "#cbd5e1",
+              marginTop: 24,
+            }}
+          >
             MeetMinds · Prototype v0.4 · Live data via Supabase ·{" "}
             <button
               onClick={() => setShowAdmin(true)}
-              style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 12, cursor: "pointer", textDecoration: "underline", padding: 0 }}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#94a3b8",
+                fontSize: 12,
+                cursor: "pointer",
+                textDecoration: "underline",
+                padding: 0,
+              }}
             >
               Admin
             </button>
           </p>
-
         </div>
       </div>
 
