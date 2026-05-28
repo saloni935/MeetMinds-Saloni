@@ -482,7 +482,7 @@ function EventCard({ event, squadBranches, onShare, onRsvp, rsvped }) {
           fontWeight: 600,
           cursor: rsvped ? "default" : "pointer",
           marginBottom: 6,
-          transition: "background 0.2s, transform 0.1s",
+          transition: "background 0.2s",
         }}
         onMouseEnter={(e) => { if (!rsvped) (e.currentTarget as HTMLButtonElement).style.background = "#dcfce7"; }}
         onMouseLeave={(e) => { if (!rsvped) (e.currentTarget as HTMLButtonElement).style.background = "#f0fdf4"; }}
@@ -502,12 +502,11 @@ function EventCard({ event, squadBranches, onShare, onRsvp, rsvped }) {
             gap: 5,
             background: event.color,
             color: "#fff",
-            borderRadius: 8,
+            borderRadius: 9,
             padding: "8px 0",
             fontSize: 12,
             fontWeight: 600,
             textDecoration: "none",
-            borderRadius: 9,
           }}
         >
           🔗 Register
