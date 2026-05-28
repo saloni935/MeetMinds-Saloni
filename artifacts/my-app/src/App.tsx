@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useEvents } from "@/hooks/use-events";
 import AdminPanel from "@/components/admin-panel";
 import AdminLogin from "@/components/admin-login";
@@ -590,6 +590,51 @@ export default function App() {
   const CITIES = useMemo(() => [...new Set(events.map((e) => e.city))], [events]);
 
   const [search, setSearch] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchWrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (searchWrapRef.current && !searchWrapRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const suggestions = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return [];
+    const seen = new Set<string>();
+    const results: { label: string; sub: string; value: string }[] = [];
+    for (const e of events) {
+      if (results.length >= 7) break;
+      const titleMatch = e.title.toLowerCase().includes(q);
+      const compMatch = e.company.toLowerCase().includes(q);
+      const tagMatch = e.tags.some((t) => t.toLowerCase().includes(q));
+      if (titleMatch || compMatch || tagMatch) {
+        const key = e.title + e.company;
+        if (!seen.has(key)) {
+          seen.add(key);
+          results.push({ label: e.title, sub: e.company, value: e.title });
+        }
+      }
+    }
+    for (const e of events) {
+      if (results.length >= 7) break;
+      const compMatch = e.company.toLowerCase().includes(q);
+      if (compMatch) {
+        const key = "co:" + e.company;
+        if (!seen.has(key)) {
+          seen.add(key);
+          results.push({ label: e.company, sub: "Company", value: e.company });
+        }
+      }
+    }
+    return results;
+  }, [search, events]);
+
   const [city, setCity] = useState("All");
   const [maxDist, setMaxDist] = useState(100);
   const [period, setPeriod] = useState("all");
@@ -768,7 +813,7 @@ export default function App() {
             flexWrap: "wrap",
           }}
         >
-          <div style={{ flex: 1, minWidth: 180, position: "relative" }}>
+          <div ref={searchWrapRef} style={{ flex: 1, minWidth: 180, position: "relative" }}>
             <span
               style={{
                 position: "absolute",
@@ -777,6 +822,7 @@ export default function App() {
                 transform: "translateY(-50%)",
                 fontSize: 15,
                 pointerEvents: "none",
+                zIndex: 1,
               }}
             >
               🔍
@@ -785,9 +831,60 @@ export default function App() {
               type="text"
               placeholder="Search events, companies, topics..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setShowSuggestions(true); }}
+              onFocus={() => setShowSuggestions(true)}
+              onKeyDown={(e) => { if (e.key === "Escape") setShowSuggestions(false); }}
               style={{ width: "100%", paddingLeft: 34 }}
             />
+            {showSuggestions && suggestions.length > 0 && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "calc(100% + 4px)",
+                  left: 0,
+                  right: 0,
+                  background: "#fff",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 10,
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.10)",
+                  zIndex: 200,
+                  overflow: "hidden",
+                }}
+              >
+                {suggestions.map((s, i) => (
+                  <button
+                    key={i}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      setSearch(s.value);
+                      setShowSuggestions(false);
+                    }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      width: "100%",
+                      padding: "9px 12px",
+                      background: "none",
+                      border: "none",
+                      borderBottom: i < suggestions.length - 1 ? "1px solid #f1f5f9" : "none",
+                      cursor: "pointer",
+                      textAlign: "left",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
+                  >
+                    <span style={{ fontSize: 14 }}>🔍</span>
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: "#1e293b", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {s.label}
+                      </span>
+                      <span style={{ fontSize: 11, color: "#94a3b8" }}>{s.sub}</span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <select value={city} onChange={(e) => setCity(e.target.value)}>
             <option value="All">All Cities</option>
