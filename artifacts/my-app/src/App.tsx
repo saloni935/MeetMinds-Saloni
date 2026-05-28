@@ -550,41 +550,7 @@ function EventCard({
       {/* Register / Link Soon / Share / LinkedIn row */}
       <div style={{ display: "flex", gap: 6 }}>
         {event.link ? (
-          <a
-            href={event.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={async (e) =>{}}
-            e.preventDefault();
-
-              try {
-                const response = await fetch(event.link, {
-                  method: "HEAD",
-                  mode: "no-cors",
-                });
-
-                window.open(event.link, "_blank");
-              } catch (error) {
-                alert("Registration link is broken or expired.");
-              }
-            }}
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 5,
-              background: event.color,
-              color: "#fff",
-              borderRadius: 9,
-              padding: "8px 0",
-              fontSize: 12,
-              fontWeight: 600,
-              textDecoration: "none",
-            }}
-          >
-            🔗 Register
-          </a>
+          
         ) : (
           <span
             style={{
@@ -606,6 +572,41 @@ function EventCard({
             🔗 Link Soon
           </span>
         )}
+      )}
+      <button
+        onClick={async () => {
+          try {
+            const res = await fetch(event.link, {
+              method: "HEAD",
+            });
+
+            if (res.ok) {
+              window.open(event.link, "_blank");
+            } else {
+              alert("Registration link expired or unavailable.");
+            }
+          } catch {
+            alert("Registration link unavailable.");
+          }
+        }}
+        style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 5,
+          background: event.color,
+          color: "#fff",
+          borderRadius: 9,
+          padding: "8px 0",
+          fontSize: 12,
+          fontWeight: 600,
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        🔗 Register
+      </button>
         <button
           onClick={() => onShare(event)}
           title="Share story card"
