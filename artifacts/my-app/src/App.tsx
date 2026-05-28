@@ -549,25 +549,40 @@ function EventCard({
 
       {/* Register / Link Soon / Share / LinkedIn row */}
       <div style={{ display: "flex", gap: 6 }}>
-        {event.link ? (
-          
-        ) : (
-          <span
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 5,
-              background: "#f1f5f9",
+        ound: "#f1f5f9",
               color: "#94a3b8",
               borderRadius: 9,
               padding: "8px 0",
-              fontSize: 12,
-              fontWeight: 600,
-              border: "1px solid #e2e8f0",
-              cursor: "default",
-            }}
+              fontSize:
+        <button
+          onClick={() => {
+            if (
+              event.link &&
+              event.link.startsWith("http")
+            ) {
+              window.open(event.link, "_blank");
+            } else {
+              alert("Registration link unavailable");
+            }
+          }}
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 5,
+            background: event.color || "#4285F4",
+            color: "#fff",
+            borderRadius: 9,
+            padding: "8px 0",
+            fontSize: 12,
+            fontWeight: 600,
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          🔗 Register
+        </button>
           >
             🔗 Link Soon
           </span>
